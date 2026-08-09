@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Evaluación Interna MAI SL — 20 puntos</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0f1419;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { font-size: 28px; margin-bottom: 8px; text-align: center; color: #fff; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 14px; }
+
+        .progress-section {
+            background: #1a2332;
+            border: 1px solid #2a3f5f;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .progress-header { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .total-score { font-size: 36px; font-weight: bold; color: #4fa3ff; min-width: 80px; }
+        .progress-bar-container { flex: 1; }
+        .progress-label { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; }
+        .progress-bar { height: 10px; background: #2a3f5f; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #4fa3ff, #7bc3ff); width: 0%; transition: width 0.3s; }
+
+        .criteria-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 30px; }
+        .criterion-card {
+            background: #1a2332;
+            border: 2px solid #2a3f5f;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .criterion-card:hover { transform: translateY(-2px); }
+
+        .criterion-card.c-a { border-color: #8b5cf6; }
+        .criterion-card.c-b { border-color: #14b8a6; }
+        .criterion-card.c-c { border-color: #f97316; }
+        .criterion-card.c-d { border-color: #ec4899; }
+        .criterion-card.c-e { border-color: #4fa3ff; }
+
+        .criterion-letter { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
+        .criterion-card.c-a .criterion-letter { color: #c4b5fd; }
+        .criterion-card.c-b .criterion-letter { color: #99f6e4; }
+        .criterion-card.c-c .criterion-letter { color: #fed7aa; }
+        .criterion-card.c-d .criterion-letter { color: #fbcfe8; }
+        .criterion-card.c-e .criterion-letter { color: #93c5fd; }
+
+        .criterion-title { font-size: 12px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; }
+        .criterion-points { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .criterion-card.c-a .criterion-points { color: #c4b5fd; }
+        .criterion-card.c-b .criterion-points { color: #99f6e4; }
+        .criterion-card.c-c .criterion-points { color: #fed7aa; }
+        .criterion-card.c-d .criterion-points { color: #fbcfe8; }
+        .criterion-card.c-e .criterion-points { color: #93c5fd; }
+
+        .criterion-mini-bar { height: 4px; background: #2a3f5f; border-radius: 2px; overflow: hidden; margin-top: 8px; }
+        .criterion-mini-fill { height: 100%; transition: width 0.3s; }
+        .criterion-card.c-a .criterion-mini-fill { background: #c4b5fd; }
+        .criterion-card.c-b .criterion-mini-fill { background: #99f6e4; }
+        .criterion-card.c-c .criterion-mini-fill { background: #fed7aa; }
+        .criterion-card.c-d .criterion-mini-fill { background: #fbcfe8; }
+        .criterion-card.c-e .criterion-mini-fill { background: #93c5fd; }
+
+        .criteria-section { margin-bottom: 30px; }
+        details {
+            background: #1a2332;
+            border: 1px solid #2a3f5f;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        details[open] { border-color: #3a4f6f; }
+
+        summary {
+            padding: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        summary:hover { background: #243447; }
+        details[open] > summary { background: #243447; }
+
+        .summary-icon { font-size: 20px; min-width: 24px; }
+        .details-a .summary-icon { color: #c4b5fd; }
+        .details-b .summary-icon { color: #99f6e4; }
+        .details-c .summary-icon { color: #fed7aa; }
+        .details-d .summary-icon { color: #fbcfe8; }
+        .details-e .summary-icon { color: #93c5fd; }
+
+        .summary-text { flex: 1; text-align: left; }
+        .summary-main { font-size: 15px; color: #fff; margin-bottom: 4px; }
+        .summary-desc { font-size: 12px; color: #666; }
+        .summary-count { font-size: 12px; color: #888; }
+
+        .items-container { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+        .item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px;
+            background: #0f1419;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .item input[type="checkbox"] {
+            margin-top: 4px;
+            cursor: pointer;
+            accent-color: #4fa3ff;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .item label { flex: 1; cursor: pointer; color: #b0b0b0; }
+        .item input[type="checkbox"]:checked + label { color: #7bc3ff; text-decoration: line-through; }
+
+        .self-audit { background: #1a2332; border: 2px solid #f97316; border-radius: 8px; padding: 20px; margin-top: 30px; }
+        .self-audit h3 { color: #fed7aa; margin-bottom: 6px; font-size: 16px; }
+        .self-audit-desc { color: #888; font-size: 12px; margin-bottom: 16px; }
+        .self-audit-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+        .self-audit-item input[type="checkbox"] {
+            margin-top: 4px;
+            cursor: pointer;
+            accent-color: #f97316;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .self-audit-item label { flex: 1; cursor: pointer; font-size: 14px; color: #b0b0b0; line-height: 1.5; }
+        .self-audit-item input[type="checkbox"]:checked + label { color: #fed7aa; }
+
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Evaluación Interna MAI SL</h1>
+        <p class="subtitle">Checklist interactivo — 20 puntos totales</p>
+
+        <div class="progress-section">
+            <div class="progress-header">
+                <div class="total-score" id="totalScore">0/40</div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">Progreso general</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="criteria-grid" id="criteriaGrid"></div>
+
+        <div class="criteria-section" id="criteriaSection"></div>
+
+        <div class="self-audit">
+            <h3>Final Self-Audit</h3>
+            <p class="self-audit-desc">Una pregunta por criterio. Estos NO dan puntos — filtran todo lo demás. Si no puedes marcarlos, hay una brecha.</p>
+            <div class="self-audit-item">
+                <input type="checkbox" id="audit-a">
+                <label for="audit-a"><strong>(A) Estructura y claridad:</strong> ¿Podría un compañero seguir mi trabajo paso a paso sin releerlo? ¿Están la introducción, cuerpo y conclusión claramente enlazados?</label>
+            </div>
+            <div class="self-audit-item">
+                <input type="checkbox" id="audit-b">
+                <label for="audit-b"><strong>(B) Lenguaje matemático:</strong> ¿Podría explicar de memoria cada ecuación, símbolo y término que usé, en mis propias palabras?</label>
+            </div>
+            <div class="self-audit-item">
+                <input type="checkbox" id="audit-c">
+                <label for="audit-c"><strong>(C) Compromiso personal:</strong> ¿Es evidente en el trabajo que YO elegí este tema y lo hice mío, o parece una plantilla genérica?</label>
+            </div>
+            <div class="self-audit-item">
+                <input type="checkbox" id="audit-d">
+                <label for="audit-d"><strong>(D) Reflexión crítica:</strong> ¿He evaluado mis propias decisiones matemáticas? ¿Reconozco limitaciones o sugiero mejoras?</label>
+            </div>
+            <div class="self-audit-item">
+                <input type="checkbox" id="audit-e">
+                <label for="audit-e"><strong>(E) Dominio matemático:</strong> ¿Las matemáticas que usé son pertinentes al objetivo? ¿Demuestro comprensión o solo aplico fórmulas?</label>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>El progreso se guarda automáticamente en tu navegador. Abre este archivo en cualquier navegador para retomar donde dejaste.</p>
+        </div>
+    </div>
+
+    <script>
+        const CRITERIA = [
+            {
+                key: 'A', class: 'c-a', details: 'details-a',
+                title: 'Presentación', pts: 4,
+                desc: 'Organización, coherencia, estructura clara.',
+                items: [
+                    'Título y código de candidato claramente incluidos en la portada.',
+                    'El objetivo o pregunta de investigación se plantea claramente en la introducción y se mantiene como foco en todo el trabajo.',
+                    'La introducción, cuerpo y conclusión están presentes y enlazados lógicamente uno con otro.',
+                    'El cuerpo está subdivido en fases claras (marco teórico, aplicación, análisis, evaluación) que muestran la progresión de la exploración.',
+                    'Gráficos, tablas y diagramas están en el lugar correcto dentro del cuerpo del trabajo, con su introducción descriptiva antes de ellos.',
+                    'Solo en apéndice: tablas de datos crudos grandes, cálculos repetitivos, o gráficos/diagramas adicionales no esenciales.',
+                    'No hay cálculos, gráficos o descripciones repetitivas que sean irrelevantes o innecesarias.',
+                    'El uso de tecnología (si aplica) está claramente indicado y explicado; se describe su propósito en el contexto de la exploración.',
+                    'Extensión aproximada 12–20 páginas (sin bibliografía ni apéndices), interlineado doble, fuente 12pt, texto justificado.',
+                    'Páginas numeradas en la parte inferior derecha, empezando en la introducción.',
+                    'Cualquier contenido fuera del programa de estudios está referenciado con notas al pie o citas en el texto.'
+                ]
+            },
+            {
+                key: 'B', class: 'c-b', details: 'details-b',
+                title: 'Comunicación matemática', pts: 4,
+                desc: 'Notación correcta, variables definidas, múltiples representaciones.',
+                items: [
+                    'La notación matemática es correcta y usada de forma consistente en todo el trabajo, sin mezclas de estilos o cambios abruptos.',
+                    'Todas las variables, parámetros y símbolos están claramente definidos cuando se introducen por primera vez.',
+                    'La notación de calculadora o computadora aparece solo si es generada automáticamente por software, y se indica claramente que proviene de una herramienta.',
+                    'Se usan varias formas de representación matemática (fórmulas, diagramas, tablas, gráficos, modelos) donde sea apropiado para el tema.',
+                    'Las ecuaciones están correctamente formateadas usando editor de ecuaciones o similares; nunca como imágenes o capturas pegadas.',
+                    'Los gráficos y diagramas están etiquetados con títulos y números (Figura 1, Tabla 2, etc.), incluyen unidades en los ejes y están completamente rotulados.',
+                    'El grado de precisión (número de decimales, redondeo) se especifica al inicio y se mantiene consistente en todo el documento.',
+                    'La bibliografía está en una página separada, con formato uniforme (APA recomendado), sin enlaces crudos sin fecha o autor.',
+                    'Las tablas no se cortan ni dividen entre páginas; si son muy largas, se mueven al apéndice completas.',
+                    'Los resultados de calculadora o software se interpretan e explican con palabras; nunca se pegan solo capturas o tablas sin contexto o explicación.'
+                ]
+            },
+            {
+                key: 'C', class: 'c-c', details: 'details-c',
+                title: 'Compromiso personal', pts: 3,
+                desc: 'Pensamiento independiente, originalidad, apropiación del tema.',
+                items: [
+                    'Hay evidencia clara de que el tema se eligió por interés o curiosidad personal auténtica, no porque "tocaba" o se asignó directamente.',
+                    'Se ve pensamiento independiente y creativo; el trabajo no reproduce una plantilla genérica o un ejemplo de libro de texto.',
+                    'El alumno demuestra apropiación real de la investigación: toma decisiones propias sobre qué método usar, qué modelo seguir, qué datos recopilar.',
+                    'Hay perspectivas alternativas exploradas o un enfoque original que distingue este trabajo de otros sobre el mismo tema.',
+                    'Se reconocen explícitamente las dificultades encontradas en el proceso y se describe cómo el alumno las abordó personalmente para avanzar.',
+                    'Si aplica, se usan datos autorrecolectados o recopilados directamente por el alumno para fortalecer la originalidad de la investigación.'
+                ]
+            },
+            {
+                key: 'D', class: 'c-d', details: 'details-d',
+                title: 'Reflexión', pts: 3,
+                desc: 'Análisis crítico, limitaciones, evaluación de decisiones.',
+                items: [
+                    'Los hallazgos matemáticos se interpretan en términos del contexto y objetivo original; no se solo listan resultados numéricos sin significado.',
+                    'Se reconocen y discuten explícitamente las limitaciones del modelo matemático, los supuestos hechos, o los datos que se ignoraron.',
+                    'La reflexión está integrada a lo largo del trabajo (no solo relegada al final); el alumno cuestiona y analiza mientras avanza.',
+                    'Hay evaluación crítica de las decisiones matemáticas tomadas: por qué se eligió ese método en lugar de otro, qué se ganaría o perdería con alternativas.',
+                    'Se retoma la pregunta o el objetivo original de la exploración y se evalúa si se respondió completamente y con qué grado de confianza.',
+                    'Se sugieren mejoras, extensiones posibles o investigaciones futuras que surgieron del trabajo realizado.'
+                ]
+            },
+            {
+                key: 'E', class: 'c-e', details: 'details-e',
+                title: 'Uso de matemáticas (NM)', pts: 6,
+                desc: 'Pertinencia, corrección, demostración de comprensión.',
+                items: [
+                    'Las matemáticas utilizadas son del nivel del curso SL (Nivel Medio), no basadas únicamente en conocimientos previos o material de nivel GCSE/secundaria inferior.',
+                    'El razonamiento matemático es correcto en su mayoría y está bien explicado; se ven los pasos de pensamiento, no solo la respuesta final.',
+                    'Los pasos clave del desarrollo matemático están mostrados y justificados; no hay saltos que el lector no pueda seguir.',
+                    'Hay algo de profundidad en la exploración matemática: no es solo aplicar mecánicamente un método conocido, sino desarrollarlo, adaptarlo o cuestionarlo.',
+                    'Las matemáticas utilizadas contribuyen directamente a responder la pregunta de investigación; no hay contenido matemático "de relleno" desconectado del objetivo.',
+                    'Se demuestra comprensión real (explicar el por qué, los conceptos subyacentes) en lugar de solo aplicar fórmulas o procedimientos sin entender.',
+                    'Los resultados matemáticos son precisos, con un nivel de redondeo y aproximación adecuado y consistente en todo el trabajo.'
+                ]
+            }
+        ];
+
+        const state = CRITERIA.map(c => c.items.map(() => false));
+        const auditState = { A: false, B: false, C: false, D: false, E: false };
+
+        function totals() {
+            const checked = state.reduce((s, arr) => s + arr.filter(Boolean).length, 0);
+            const total = state.reduce((s, arr) => s + arr.length, 0);
+            return { checked, total };
+        }
+
+        function updateProgress() {
+            const { checked, total } = totals();
+            document.getElementById('totalScore').textContent = checked + '/' + total;
+            document.getElementById('progressFill').style.width = Math.round(checked / total * 100) + '%';
+
+            CRITERIA.forEach((c, ci) => {
+                const done = state[ci].filter(Boolean).length;
+                const card = document.querySelector(`[data-criterion="${c.key}"]`);
+                if (card) {
+                    card.querySelector('.criterion-mini-fill').style.width = Math.round(done / c.items.length * 100) + '%';
+                }
+            });
+
+            localStorage.setItem('mai-checklist', JSON.stringify({ state, auditState }));
+        }
+
+        function init() {
+            const saved = localStorage.getItem('mai-checklist');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.length = 0;
+                state.push(...data.state);
+                Object.assign(auditState, data.auditState);
+            }
+
+            const grid = document.getElementById('criteriaGrid');
+            CRITERIA.forEach((c, ci) => {
+                const card = document.createElement('div');
+                card.className = 'criterion-card ' + c.class;
+                card.setAttribute('data-criterion', c.key);
+                const done = state[ci].filter(Boolean).length;
+                card.innerHTML = `
+                    <div class="criterion-letter">${c.key}</div>
+                    <div class="criterion-title">${c.title}</div>
+                    <div class="criterion-points">${done}/${c.items.length}</div>
+                    <div class="criterion-mini-bar">
+                        <div class="criterion-mini-fill" style="width: ${Math.round(done / c.items.length * 100)}%"></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            const section = document.getElementById('criteriaSection');
+            CRITERIA.forEach((c, ci) => {
+                const details = document.createElement('details');
+                details.className = c.details;
+                details.open = ci === 0;
+                const summary = document.createElement('summary');
+                summary.innerHTML = `
+                    <div class="summary-icon">${c.key}</div>
+                    <div class="summary-text">
+                        <div class="summary-main">Criterio ${c.key}: ${c.title}</div>
+                        <div class="summary-desc">${c.desc}</div>
+                    </div>
+                    <div class="summary-count">${state[ci].filter(Boolean).length}/${c.items.length}</div>
+                `;
+                details.appendChild(summary);
+
+                const container = document.createElement('div');
+                container.className = 'items-container';
+                c.items.forEach((item, ii) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item';
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.id = `item-${ci}-${ii}`;
+                    cb.checked = state[ci][ii];
+                    cb.addEventListener('change', () => {
+                        state[ci][ii] = cb.checked;
+                        updateProgress();
+                    });
+                    const label = document.createElement('label');
+                    label.htmlFor = `item-${ci}-${ii}`;
+                    label.textContent = item;
+                    itemDiv.appendChild(cb);
+                    itemDiv.appendChild(label);
+                    container.appendChild(itemDiv);
+                });
+                details.appendChild(container);
+                section.appendChild(details);
+            });
+
+            ['A', 'B', 'C', 'D', 'E'].forEach(key => {
+                const cb = document.getElementById(`audit-${key.toLowerCase()}`);
+                if (cb) {
+                    cb.checked = auditState[key];
+                    cb.addEventListener('change', () => {
+                        auditState[key] = cb.checked;
+                        localStorage.setItem('mai-checklist', JSON.stringify({ state, auditState }));
+                    });
+                }
+            });
+
+            updateProgress();
+        }
+
+        init();
+    </script>
+</body>
+</html>
